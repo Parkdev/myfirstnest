@@ -6,13 +6,8 @@ import { AppService } from './app.service';
 export class AppController {
   constructor(private readonly appService: AppService) {}
   // 2차 path
-  @Get('blue/:id/:name')
-  getHello(
-    @Req() req: Request,
-    @Body() body,
-    @Param param: { id: string; name: string },
-  ): string {
-    console.log(param);
+  @Get()
+  getHello(): string {
     return this.appService.getHello();
   }
 }
