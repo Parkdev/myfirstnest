@@ -1,5 +1,6 @@
 import { Controller, Delete, Get, Patch, Post, Put } from '@nestjs/common';
 import { get } from 'http';
+import { CatsService } from './cats.service';
 
 @Controller('cats')
 export class CatsController {
@@ -9,7 +10,7 @@ export class CatsController {
   // cats/
   @Get()
   getAllCats() {
-    return 'all cats';
+    return this.catsService.hiToCats();
   }
 
   // cats/:id
