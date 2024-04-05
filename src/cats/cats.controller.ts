@@ -4,6 +4,8 @@ import {
   Get,
   HttpException,
   HttpStatus,
+  Param,
+  ParseIntPipe,
   Patch,
   Post,
   Put,
@@ -39,7 +41,9 @@ export class CatsController {
 
   // cats/:id
   @Get(':id')
-  getOneCat() {
+  getOneCat(@Param('id', ParseIntPipe) params: any) {
+    // ParseIntPipe: id를 숫자로 변환 // string으로 들어왔을때 유효성 검사도 겸할 수 있다.
+    console.log(params);
     return 'one cat';
   }
 
