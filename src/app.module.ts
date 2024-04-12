@@ -16,7 +16,11 @@ import { ConfigModule } from '@nestjs/config';
   providers: [AppService],
 })
 export class AppModule implements NestModule {
+  private readonly isDev : string = process.env.MODE === 'dev' ? true: false;
+
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(LoggerMiddleware).forRoutes('*');
+    //mongoose 로그 찍어주기
+    mongoose.set('debug', this.isDev;
   }
 }
