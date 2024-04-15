@@ -23,7 +23,7 @@ export class Cat extends Document {
   })
   @IsString()
   @IsNotEmpty()
-  catname: string;
+  name: string;
 
   @Prop({
     requried: true,
@@ -35,7 +35,18 @@ export class Cat extends Document {
   @Prop()
   @IsString()
   imgUrl: string;
+
+  readonly readOnlyData: { id: string; email: string; name: string };
 }
 
 // 클래스를 스키마로
 export const CatSchema = SchemaFactory.createForClass(Cat);
+
+// 데이터 리턴용 가상 필드
+CatSchema.virtual('readOnlyData').get(function (this: Cat) {
+  return {
+    id: this.id,
+    email: this.email,
+    name: this.name,
+  };
+});

@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
@@ -16,10 +17,11 @@ import { CatsService } from './cats.service';
 import { HttpExceptionFilter } from 'src/http-exception.filter';
 import { PositiveIntPipe } from '../pipes/positiveint.pipe';
 import { SuccessInterceptor } from './success.intercepter';
+import { CatRequestDto } from './dto/cats.request.dto';
 
 @Controller('cats')
 @UseInterceptors(SuccessInterceptor) // 인터셉터 의존성 주입
-@UseFilters(HttpExceptionFilter) // 모든 url에 적용할때
+@UseFilters(HttpExceptionFilter) // cats/ 에 파생되는 모든 url에 Exception을 적용할때 추가
 export class CatsController {
   constructor(private readonly catsService: CatsService) {}
   @Get()
@@ -28,8 +30,8 @@ export class CatsController {
   }
 
   @Post()
-  async signUp() {
-    return 'signup';
+  async signUp(@Body() body: CatRequestDto) {
+    return await this.catsService.signUp(body);
   }
   @Post('login')
   logIn() {
