@@ -22,7 +22,6 @@ import { SuccessInterceptor } from './success.intercepter';
 @UseFilters(HttpExceptionFilter) // 모든 url에 적용할때
 export class CatsController {
   constructor(private readonly catsService: CatsService) {}
-
   @Get()
   getCurrentCat() {
     return 'current cat';
