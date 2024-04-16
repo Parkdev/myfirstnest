@@ -18,31 +18,49 @@ import { HttpExceptionFilter } from 'src/http-exception.filter';
 import { PositiveIntPipe } from '../pipes/positiveint.pipe';
 import { SuccessInterceptor } from './success.intercepter';
 import { CatRequestDto } from './dto/cats.request.dto';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ReadOnlyCatDto } from './dto/cat.dto';
 
 @Controller('cats')
 @UseInterceptors(SuccessInterceptor) // 인터셉터 의존성 주입
 @UseFilters(HttpExceptionFilter) // cats/ 에 파생되는 모든 url에 Exception을 적용할때 추가
 export class CatsController {
   constructor(private readonly catsService: CatsService) {}
+
+  @ApiOperation({ summary: '고양이 목록' })
   @Get()
   getCurrentCat() {
     return 'current cat';
   }
 
+  @ApiOperation({ summary: '회원가입' })
+  @ApiResponse({
+    status: 500,
+    description: 'Server Error...',
+  })
+  @ApiResponse({
+    status: 200,
+    description: '성공!',
+    type: ReadOnlyCatDto,
+  })
   @Post()
   async signUp(@Body() body: CatRequestDto) {
     return await this.catsService.signUp(body);
   }
+
+  @ApiOperation({ summary: '로그인' })
   @Post('login')
   logIn() {
     return 'login';
   }
 
+  @ApiOperation({ summary: '로그아웃' })
   @Post('logout')
   logOut() {
     return 'logout';
   }
 
+  @ApiOperation({ summary: '업로드' })
   @Post('upload/cats')
   uploadCatImg() {
     return 'upload cat img';

@@ -36,11 +36,11 @@ export class HttpExceptionFilter implements ExceptionFilter {
     }
 
     // res.status(400).send({error message})
-    response.status(status).json({
-      statusCode: status,
-      timestamp: new Date().toISOString(),
-      path: request.url,
-      error,
-    });
+    // response.status(status).json({
+    //   statusCode: status,
+    //   timestamp: new Date().toISOString(),
+    //   path: request.url,
+    //   error,
+    // });
   }
 }
