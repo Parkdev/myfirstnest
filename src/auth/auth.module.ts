@@ -10,7 +10,7 @@ import { CatsModule } from 'src/cats/cats.module';
     PassportModule.register({ defaultStrategy: 'jwt', session: false }), // 전략에 대한 기본적인 설정
 
     JwtModule.register({
-      // JWT모듈에 대한 설정
+      // JWT모듈에 대한 설정 ()
       secret: 'secret',
       signOptions: { expiresIn: '1y' },
     }),

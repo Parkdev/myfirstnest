@@ -11,7 +11,9 @@ import {
   Patch,
   Post,
   Put,
+  Req,
   UseFilters,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { CatsService } from './cats.service';
@@ -22,6 +24,8 @@ import { CatRequestDto } from './dto/cats.request.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ReadOnlyCatDto } from './dto/cat.dto';
 import { LoginRequestDto } from 'src/auth/dto/login.request.dto';
+import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
+import { Request } from 'express';
 
 @Controller('cats')
 @UseInterceptors(SuccessInterceptor) // 인터셉터 의존성 주입
@@ -34,9 +38,11 @@ export class CatsController {
   ) {}
 
   @ApiOperation({ summary: '고양이 목록' })
+  @UseGuards(JwtAuthGuard) // 가드를 통해 인증하고
   @Get()
-  getCurrentCat() {
-    return 'current cat';
+  // 인증 처리 된 정보를 req로 넘겨줄 수 있다.
+  getCurrentCat(@Req() request: Request) {
+    return request.user;
   }
 
   @ApiOperation({ summary: '회원가입' })
