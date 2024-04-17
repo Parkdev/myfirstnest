@@ -26,6 +26,8 @@ import { ReadOnlyCatDto } from './dto/cat.dto';
 import { LoginRequestDto } from 'src/auth/dto/login.request.dto';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 import { Request } from 'express';
+import { CurrentUser } from 'src/common/decorators/user.decorator';
+import { Cat } from './cats.schema';
 
 @Controller('cats')
 @UseInterceptors(SuccessInterceptor) // 인터셉터 의존성 주입
@@ -41,8 +43,8 @@ export class CatsController {
   @UseGuards(JwtAuthGuard) // 가드를 통해 인증하고
   @Get()
   // 인증 처리 된 정보를 req로 넘겨줄 수 있다.
-  getCurrentCat(@Req() request: Request) {
-    return request.user;
+  getCurrentCat(@CurrentUser() cat: Cat) {
+    return cat.readOnlyData;
   }
 
   @ApiOperation({ summary: '회원가입' })
