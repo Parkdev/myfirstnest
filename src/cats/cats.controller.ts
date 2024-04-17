@@ -67,12 +67,12 @@ export class CatsController {
   logIn(@Body() data: LoginRequestDto) {
     return this.AuthService.jwtLogIn(data);
   }
-
-  @ApiOperation({ summary: '로그아웃' })
-  @Post('logout')
-  logOut() {
-    return 'logout';
-  }
+  // JWT 사용시 필요없다.
+  // @ApiOperation({ summary: '로그아웃' })
+  // @Post('logout')
+  // logOut() {
+  //   return 'logout';
+  // }
 
   @ApiOperation({ summary: '업로드' })
   @Post('upload/cats')
