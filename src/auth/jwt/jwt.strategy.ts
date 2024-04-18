@@ -9,7 +9,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(private readonly CatsRepository: CatsRepository) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), // 헤더에서 토큰추출
-      secretOrKey: 'secret', //임시적, 나중에 환경변수로 기입예정 | 생성시 키와 동일해야한다.
+      secretOrKey: process.env.JWT_SECRET, // 생성시 키와 동일해야한다.
       ignoreExpiration: false, // JWT만료기간 무시 여부 (false: 만료시간이 지나면 401에러 발생)
     });
   }

@@ -1,4 +1,4 @@
-import { AuthService } from './../auth/auth.service';
+import { AuthService } from '../../auth/auth.service';
 import {
   Body,
   Controller,
@@ -12,22 +12,26 @@ import {
   Post,
   Put,
   Req,
+  UploadedFile,
+  UploadedFiles,
   UseFilters,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { CatsService } from './cats.service';
+import { CatsService } from '../service/cats.service';
 import { HttpExceptionFilter } from 'src/http-exception.filter';
-import { PositiveIntPipe } from '../pipes/positiveint.pipe';
-import { SuccessInterceptor } from './success.intercepter';
-import { CatRequestDto } from './dto/cats.request.dto';
+import { PositiveIntPipe } from '../../pipes/positiveint.pipe';
+import { SuccessInterceptor } from '../success.intercepter';
+import { CatRequestDto } from '../dto/cats.request.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { ReadOnlyCatDto } from './dto/cat.dto';
+import { ReadOnlyCatDto } from '../dto/cat.dto';
 import { LoginRequestDto } from 'src/auth/dto/login.request.dto';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 import { Request } from 'express';
 import { CurrentUser } from 'src/common/decorators/user.decorator';
-import { Cat } from './cats.schema';
+import { Cat } from '../cats.schema';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { multerOptions } from 'src/common/utils/multer.options';
 
 @Controller('cats')
 @UseInterceptors(SuccessInterceptor) // 인터셉터 의존성 주입
@@ -75,8 +79,15 @@ export class CatsController {
   // }
 
   @ApiOperation({ summary: '업로드' })
-  @Post('upload/cats')
-  uploadCatImg() {
-    return 'upload cat img';
+  @UseInterceptors(FilesInterceptor('image', 10, multerOptions('cats'))) // 파일 업로드
+  @UseGuards(JwtAuthGuard)
+  @Post('upload')
+  uploadFile(
+    @UploadedFiles() files: Array<Express.Multer.File>,
+    @CurrentUser() cat: Cat,
+  ) {
+    console.log(files);
+    // return { image: `http://localhost:8000/media/cats/${files[0].filename}` };
+    return this.catsService.uploadImg(cat, files);
   }
 }
