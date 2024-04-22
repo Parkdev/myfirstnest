@@ -78,7 +78,7 @@ export class CatsController {
   //   return 'logout';
   // }
 
-  @ApiOperation({ summary: '업로드' })
+  @ApiOperation({ summary: '고양이 업로드' })
   @UseInterceptors(FilesInterceptor('image', 10, multerOptions('cats'))) // 파일 업로드
   @UseGuards(JwtAuthGuard)
   @Post('upload')
@@ -89,5 +89,11 @@ export class CatsController {
     console.log('파일', files);
     // return { image: `http://localhost:8000/media/cats/${files[0].filename}` };
     return this.catsService.uploadImg(cat, files);
+  }
+
+  @ApiOperation({ summary: '모든 고양이 가져오기' })
+  @Get('all')
+  getAllCat() {
+    return this.catsService.getAllCat();
   }
 }

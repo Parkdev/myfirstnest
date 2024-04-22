@@ -46,4 +46,12 @@ export class CatsService {
     // 업데이트된 고양이를 반환한다.
     return newCat;
   }
+
+  // 고양이 정보 전부 가져오기
+  async getAllCat() {
+    const allCat = await this.catsRepository.findAll(); // 전부 가져와서
+    const readOnlyCats = allCat.map((cat) => cat.readOnlyData); //하나하나 가상 스키마로 변경
+    return readOnlyCats;
+    // return allCat;
+  }
 }
