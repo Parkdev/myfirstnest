@@ -12,10 +12,10 @@ import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    //파일 전송을 위한 MulterModule 등록
-    MulterModule.register({
-      dest: './upload', //destination
-    }),
+    //로컬 파일 전송을 위한 MulterModule 등록
+    // MulterModule.register({
+    //   dest: './upload', //destination
+    // }),
     // Cat 모델을 사용하기 위해 스키마와 함께 등록
     MongooseModule.forFeature([
       { name: Comments.name, schema: CommentsSchema }, // 의존성 추가
