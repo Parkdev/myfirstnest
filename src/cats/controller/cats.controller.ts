@@ -1,3 +1,4 @@
+import { AwsService } from './../service/aws.service';
 import { AuthService } from '../../auth/auth.service';
 import {
   Body,
@@ -7,6 +8,7 @@ import {
   HttpException,
   HttpStatus,
   Param,
+  ParseFilePipe,
   ParseIntPipe,
   Patch,
   Post,
@@ -41,6 +43,7 @@ export class CatsController {
     private readonly catsService: CatsService,
     //로그인 처리를 위한 의존성 주입
     private readonly AuthService: AuthService,
+    private readonly AwsService: AwsService,
   ) {}
 
   @ApiOperation({ summary: '고양이 목록' })
@@ -78,22 +81,32 @@ export class CatsController {
   //   return 'logout';
   // }
 
-  @ApiOperation({ summary: '고양이 업로드' })
-  @UseInterceptors(FilesInterceptor('image', 10, multerOptions('cats'))) // 파일 업로드
-  @UseGuards(JwtAuthGuard)
   @Post('upload')
-  uploadFile(
-    @UploadedFiles() files: Array<Express.Multer.File>,
-    @CurrentUser() cat: Cat,
+  @ApiOperation({ summary: '고양이 업로드' })
+  @UseGuards(JwtAuthGuard)
+  // @UseInterceptors(FilesInterceptor('image', 10, multerOptions('cats'))) // 파일 업로드
+  @UseInterceptors(FileInterceptor('image')) // 파일 업로드
+  async uploadMediaFile(
+    // @UploadedFiles() files: Array<Express.Multer.File>,
+    @UploadedFile() file: Express.Multer.File,
+    // @CurrentUser() cat: Cat,
   ) {
-    console.log('파일', files);
+    console.log('파일 : ', file);
     // return { image: `http://localhost:8000/media/cats/${files[0].filename}` };
-    return this.catsService.uploadImg(cat, files);
+    // 파일 검토
+
+    return await this.AwsService.uploadFileToS3(`cat`, file);
   }
 
   @ApiOperation({ summary: '모든 고양이 가져오기' })
   @Get('all')
   getAllCat() {
     return this.catsService.getAllCat();
+  }
+
+  @ApiOperation({ summary: '고양이 사진 가져오기' })
+  @Post('getImage')
+  getImageUrl(@Body('key') key: string) {
+    return this.AwsService.getAwsS3FileUrl(key);
   }
 }

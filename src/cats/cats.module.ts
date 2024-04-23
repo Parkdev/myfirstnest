@@ -7,6 +7,8 @@ import { CatsRepository } from './cats.repository';
 import { AuthModule } from 'src/auth/auth.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { Comments, CommentsSchema } from 'src/comments/comments.schema';
+import { AwsService } from './service/aws.service';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -21,9 +23,12 @@ import { Comments, CommentsSchema } from 'src/comments/comments.schema';
     ]),
     // 순환 참조 방지를 위해 forwardRef() 사용
     forwardRef(() => AuthModule),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
   ],
   controllers: [CatsController],
-  providers: [CatsService, CatsRepository],
+  providers: [CatsService, CatsRepository, AwsService],
   exports: [CatsService, CatsRepository],
 })
 export class CatsModule {}
